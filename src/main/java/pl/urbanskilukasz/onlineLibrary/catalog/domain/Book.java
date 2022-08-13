@@ -1,4 +1,4 @@
-package pl.urbanskilukasz.onlineLibrary;
+package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
 public class Book {
 
