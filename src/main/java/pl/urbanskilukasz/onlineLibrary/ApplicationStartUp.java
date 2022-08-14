@@ -13,19 +13,27 @@ public class ApplicationStartUp implements CommandLineRunner {
 
     private final CatalogController controller;
     private final String title;
+    private final String author;
 
     public ApplicationStartUp(
             CatalogController catalogController,
-            @Value("${onlineLibrary.catalog.query}") String title
+            @Value("${onlineLibrary.catalog.query.title:Lord}") String title,
+            @Value("${onlineLibrary.catalog.query.author:Rowling}") String author
     ) {
         this.controller = catalogController;
         this.title = title;
+        this.author = author;
     }
 
     @Override
     public void run(String... args) {
         //BookService bookService = new BookService();
         List<Book> books = controller.findByTitle(title);
+        System.out.println("List of books by title:");
         books.forEach(System.out::println);
+
+        List<Book> booksByAuthor = controller.findByAuthor(author);
+        System.out.println("List of books by author:");
+        booksByAuthor.forEach(System.out::println);
     }
 }

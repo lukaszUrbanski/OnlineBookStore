@@ -1,6 +1,5 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,15 @@ public class CatalogService {
     public List<Book> findByTitle(String title){
         return repository.findAll()
                 .stream()
-                .filter(book -> book.getTitle().startsWith(title))
+                .filter(book -> book.getTitle().contains(title))
                 .collect(Collectors.toList());
 
+    }
+
+    public List<Book> findByAuthor(String author){
+        return repository.findAll()
+                .stream()
+                .filter(book -> book.getAuthor().contains(author))
+                .collect(Collectors.toList());
     }
 }
