@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class MemoryCatalogRepositoryImpl implements CatalogRepository {
+public class SchoolCatalogRepository implements CatalogRepository {
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
 
-    public MemoryCatalogRepositoryImpl() {
-        storage.put(1L, new Book(1L, "Harry Pootter and the Philosopher's Stone", "J. K. Rowling", 1997));
-        storage.put(2L, new Book(2L, "Harry Pootter and the Camber of Secret", "J. K. Rowling", 1998));
-        storage.put(3L, new Book(3L, "Harry Pootter and the Prisoner of Azcaban", "J. K. Rowling", 1999));
-        storage.put(4L, new Book(4L, "The Lord of the Rings: The Fellowship of the Ring", "J. R. R. Tolkien", 1954));
+    public SchoolCatalogRepository() {
+        storage.put(1L, new Book(1L, "Pan Tadeusz", "Adam Mickiewicz", 1834));
+        storage.put(2L, new Book(2L, "Ogniem i Mieczem", "Henryk Sienkiewicz", 1998));
+        storage.put(3L, new Book(3L, "Chłopi", "Włądysław Rejmont", 1999));
+        storage.put(4L, new Book(4L, "Pan Wołodyjowski", "Henryk Sienkiewicz", 1954));
 
     }
 
@@ -25,4 +25,5 @@ public class MemoryCatalogRepositoryImpl implements CatalogRepository {
     public List<Book> findAll() {
         return new ArrayList<>(storage.values());
     }
+
 }

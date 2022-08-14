@@ -1,26 +1,19 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 public class Book {
 
-    public Long id;
-    public String title;
-    public String author;
-    public int year;
+    private final Long id;
+    private final String title;
+    private final String author;
+    private final int year;
 
-    public Book(Long id, String title, String author, int year) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                '}';
-    }
 }
