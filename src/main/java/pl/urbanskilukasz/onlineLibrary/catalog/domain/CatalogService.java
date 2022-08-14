@@ -12,6 +12,7 @@ public class CatalogService {
 
     private final CatalogRepository repository;
 
+
     public CatalogService(@Qualifier("bestsellerCatalogRepository") CatalogRepository repository) {
         this.repository = repository;
     }
