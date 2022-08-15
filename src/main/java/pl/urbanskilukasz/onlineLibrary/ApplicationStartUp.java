@@ -30,8 +30,10 @@ public class ApplicationStartUp implements CommandLineRunner {
     @Override
     public void run(String... args) {
         dataInit();
-        findByAuthor();
         findByTitle();
+        findByAuthor();
+        findAndUpdate();
+        findByAuthor();
     }
     private void dataInit(){
         catalog.addBook(new CreateBookCommand("Harry Pootter and the Philosopher's Stone", "J. K. Rowling", 1997));
@@ -58,5 +60,20 @@ public class ApplicationStartUp implements CommandLineRunner {
         List<Book> books = catalog.findByTitle(title);
         System.out.println("List of books by title:");
         books.forEach(System.out::println);
+    }
+
+    private void findAndUpdate(){
+        System.out.println("Updating book ...");
+        catalog.findOneByTitleAndAuthor("The Lord of the Rings: Two towers","J. R. R. Tolkien" )
+                .ifPresent(book -> {
+                    UpdateBookCommand command= new UpdateBookCommand(
+                            book.getId(),
+                            "The Lord of the Rings: The Two Towers",
+                            book.getAuthor(),
+                            book.getYear()
+                    );
+                    catalog.updateBook(command);
+                });
+
     }
 }

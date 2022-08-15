@@ -6,6 +6,8 @@ import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
+
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
 
@@ -17,14 +19,30 @@ public interface CatalogUseCase {
 
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
 
-    void deleteById(Long id);
+    UpdateBookResponse updateBook(UpdateBookCommand command);
 
-    void updateBook();
+    void deleteById(Long id);
 
     @Value
     class CreateBookCommand{
         String title;
         String author;
         Integer year;
+    }
+
+    @Value
+    class UpdateBookCommand{
+        Long id;
+        String title;
+        String author;
+        Integer year;
+    }
+
+    @Value
+    class UpdateBookResponse{
+        public static  UpdateBookResponse SUCCESS = new UpdateBookResponse(true, emptyList());
+
+        boolean success;
+        List<String> errors;
     }
 }

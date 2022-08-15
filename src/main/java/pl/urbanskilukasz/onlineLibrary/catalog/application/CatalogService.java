@@ -7,6 +7,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.CatalogRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public List<Book> findAll(){
-        return null;
+        return repository.findAll();
     }
 
     @Override
@@ -47,12 +48,26 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public Optional<Book> findOneByTitleAndAuthor(String title, String author){
-        return Optional.empty();
+        return repository.findAll()
+                .stream()
+                .filter(book -> book.getAuthor().contains(author))
+                .filter(book -> book.getTitle().contains(title))
+                .findFirst();
     }
 
     @Override
     public void deleteById(Long id){ }
 
     @Override
-    public void updateBook(){}
+    public UpdateBookResponse updateBook(UpdateBookCommand command){
+       return repository.findById(command.getId())
+               .map(book -> {
+                   book.setTitle(command.getTitle());
+                   book.setAuthor(command.getAuthor());
+                   book.setYear(command.getYear());
+                   repository.save(book);
+                   return UpdateBookResponse.SUCCESS;
+               })
+                .orElseGet(()-> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));
+    }
 }

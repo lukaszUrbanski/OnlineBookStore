@@ -7,6 +7,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.domain.CatalogRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -14,6 +15,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MemoryCatalogRepository implements CatalogRepository {
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
     private final AtomicLong ID_NEXT_VALUE = new AtomicLong(0L);
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return Optional.ofNullable(storage.get(id));
+    }
 
     public MemoryCatalogRepository() {
 
@@ -26,9 +32,13 @@ public class MemoryCatalogRepository implements CatalogRepository {
 
     @Override
     public void save(Book book) {
-        long nextId = nextId();
-        book.setId(nextId);
-        storage.put(nextId, book);
+        if (book.getId() != null) {
+            storage.put(book.getId(), book);
+        } else {
+            long nextId = nextId();
+            book.setId(nextId);
+            storage.put(nextId, book);
+        }
     }
 
     private long nextId() {
