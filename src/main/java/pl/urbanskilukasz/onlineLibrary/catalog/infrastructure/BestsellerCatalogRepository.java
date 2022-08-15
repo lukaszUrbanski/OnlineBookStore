@@ -20,8 +20,8 @@ public class BestsellerCatalogRepository implements CatalogRepository {
         storage.put(4L, new Book(4L, "The Lord of the Rings: The Fellowship of the Ring", "J. R. R. Tolkien", 1954));
         storage.put(5L, new Book(5L, "The Lord of the Rings: Two towers", "J. R. R. Tolkien", 1954));
         storage.put(6L, new Book(6L, "The Lord of the Rings: The Return of the King", "J. R. R. Tolkien", 1954));
-        storage.put(6L, new Book(7L, "The Little Prince", "Antoine’a de Saint-Exupéry", 1943));
-        storage.put(6L, new Book(8L,  "The Da Vinci Code","Dan Brown",  2003));
+        storage.put(7L, new Book(7L, "The Little Prince", "Antoine’a de Saint-Exupéry", 1943));
+        storage.put(8L, new Book(8L,  "The Da Vinci Code","Dan Brown",  2003));
 
 
     }
