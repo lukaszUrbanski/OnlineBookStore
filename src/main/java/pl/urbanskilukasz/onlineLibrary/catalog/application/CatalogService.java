@@ -1,5 +1,6 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.application;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
@@ -11,14 +12,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 class CatalogService implements CatalogUseCase {
 
     private final CatalogRepository repository;
-
-
-    public CatalogService(@Qualifier("bestsellerCatalogRepository") CatalogRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<Book> findByTitle(String title){
@@ -40,6 +37,12 @@ class CatalogService implements CatalogUseCase {
     @Override
     public List<Book> findAll(){
         return null;
+    }
+
+    @Override
+    public void addBook(CreateBookCommand command) {
+        Book book = new Book(command.getTitle(), command.getAuthor(), command.getYear() );
+        repository.save(book);
     }
 
     @Override

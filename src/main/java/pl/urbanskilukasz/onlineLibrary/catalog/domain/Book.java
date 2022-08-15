@@ -11,9 +11,14 @@ import lombok.ToString;
 @ToString
 public class Book {
 
-    private final Long id;
-    private final String title;
-    private final String author;
-    private final int year;
+    private Long id;
+    private String title;
+    private String author;
+    private int year;
 
+    public Book(String title, String author, int year) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+    }
 }
