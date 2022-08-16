@@ -56,16 +56,16 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public void deleteById(Long id){ }
+    public void removeById(Long id){
+        repository.removeById(id);
+    }
 
     @Override
     public UpdateBookResponse updateBook(UpdateBookCommand command){
        return repository.findById(command.getId())
                .map(book -> {
-                   book.setTitle(command.getTitle());
-                   book.setAuthor(command.getAuthor());
-                   book.setYear(command.getYear());
-                   repository.save(book);
+                   Book updatedBook =  command.updateFields(book);
+                   repository.save(updatedBook);
                    return UpdateBookResponse.SUCCESS;
                })
                 .orElseGet(()-> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));

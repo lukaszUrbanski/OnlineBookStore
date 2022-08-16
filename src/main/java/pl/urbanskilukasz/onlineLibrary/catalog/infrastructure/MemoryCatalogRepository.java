@@ -41,7 +41,14 @@ public class MemoryCatalogRepository implements CatalogRepository {
         }
     }
 
+    @Override
+    public void removeById(Long id) {
+        storage.remove(id);
+    }
+
     private long nextId() {
         return ID_NEXT_VALUE.getAndIncrement();
     }
+
+
 }

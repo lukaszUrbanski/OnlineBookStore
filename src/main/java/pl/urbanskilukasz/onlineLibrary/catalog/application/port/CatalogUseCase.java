@@ -1,5 +1,6 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.application.port;
 
+import lombok.Builder;
 import lombok.Value;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
@@ -21,7 +22,7 @@ public interface CatalogUseCase {
 
     UpdateBookResponse updateBook(UpdateBookCommand command);
 
-    void deleteById(Long id);
+    void removeById(Long id);
 
     @Value
     class CreateBookCommand{
@@ -31,11 +32,25 @@ public interface CatalogUseCase {
     }
 
     @Value
+    @Builder
     class UpdateBookCommand{
         Long id;
         String title;
         String author;
         Integer year;
+
+       public Book updateFields(Book book){
+            if(title != null){
+                 book.setTitle(title);
+            }
+            if(author != null){
+                book.setAuthor(author);
+            }
+            if(year != null){
+                book.setYear(year);
+            }
+            return book;
+        }
     }
 
     @Value

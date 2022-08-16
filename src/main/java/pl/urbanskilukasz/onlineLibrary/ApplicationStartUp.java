@@ -33,8 +33,14 @@ public class ApplicationStartUp implements CommandLineRunner {
         findByTitle();
         findByAuthor();
         findAndUpdate();
+        removeById();
         findByAuthor();
     }
+
+    private void removeById() {
+        catalog.removeById(5L);
+    }
+
     private void dataInit(){
         catalog.addBook(new CreateBookCommand("Harry Pootter and the Philosopher's Stone", "J. K. Rowling", 1997));
         catalog.addBook(new CreateBookCommand("Harry Pootter and the Camber of Secret", "J. K. Rowling", 1998));
@@ -66,14 +72,14 @@ public class ApplicationStartUp implements CommandLineRunner {
         System.out.println("Updating book ...");
         catalog.findOneByTitleAndAuthor("The Lord of the Rings: Two towers","J. R. R. Tolkien" )
                 .ifPresent(book -> {
-                    UpdateBookCommand command= new UpdateBookCommand(
-                            book.getId(),
-                            "The Lord of the Rings: The Two Towers",
-                            book.getAuthor(),
-                            book.getYear()
-                    );
+                    UpdateBookCommand command = UpdateBookCommand
+                            .builder()
+                            .id(book.getId())
+                            .title("The Lord of the Rings: The Two Towers")
+                            .build();
+
                     catalog.updateBook(command);
                 });
-
     }
+
 }
