@@ -42,7 +42,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void addBook(CreateBookCommand command) {
-        Book book = new Book(command.getTitle(), command.getAuthor(), command.getYear() );
+        Book book = new Book(command.getTitle(), command.getAuthor(), command.getYear(), null );
         repository.save(book);
     }
 

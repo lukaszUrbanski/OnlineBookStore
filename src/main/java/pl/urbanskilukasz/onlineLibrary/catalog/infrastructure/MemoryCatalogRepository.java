@@ -21,10 +21,6 @@ public class MemoryCatalogRepository implements CatalogRepository {
         return Optional.ofNullable(storage.get(id));
     }
 
-    public MemoryCatalogRepository() {
-
-    }
-
     @Override
     public List<Book> findAll() {
         return new ArrayList<>(storage.values());
