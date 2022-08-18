@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +25,18 @@ public interface CatalogUseCase {
 
     void removeById(Long id);
 
+    Optional<Book> findOneByTitle(String title);
+
     @Value
     class CreateBookCommand{
         String title;
         String author;
         Integer year;
+        BigDecimal price;
+
+        public Book toBook(){
+            return  new Book(title, author, year, price);
+        }
     }
 
     @Value
