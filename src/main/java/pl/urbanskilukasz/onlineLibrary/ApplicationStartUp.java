@@ -30,6 +30,14 @@ public class ApplicationStartUp implements CommandLineRunner {
     @Override
     public void run(String... args) {
         dataInit();
+        searchCatalog();
+        placeOrder();
+    }
+
+    private void placeOrder() {
+    }
+
+    private void searchCatalog() {
         findByTitle();
         findByAuthor();
         findAndUpdate();

@@ -19,7 +19,7 @@ public class MemoryOrderRepository implements OrderRepository {
 
 
     @Override
-    public void save(Order order) {
+    public Order save(Order order) {
         if (order.getId() != null) {
             storage.put(order.getId(), order);
         }else {
@@ -28,6 +28,7 @@ public class MemoryOrderRepository implements OrderRepository {
             order.setCreatedAt(LocalDateTime.now());
             storage.put(nextId, order);
         }
+        return order;
     }
 
     @Override
