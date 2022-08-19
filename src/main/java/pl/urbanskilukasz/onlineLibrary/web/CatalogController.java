@@ -2,6 +2,7 @@ package pl.urbanskilukasz.onlineLibrary.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
@@ -20,5 +21,10 @@ public class CatalogController {
     @GetMapping
     public List<Book> findAll(){
         return catalog.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Book findById(@PathVariable Long id){
+        return catalog.findById(id).orElse(null);
     }
 }

@@ -69,6 +69,12 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
+    public Optional<Book> findById(Long id) {
+
+        return repository.findById(id);
+    }
+
+    @Override
     public UpdateBookResponse updateBook(UpdateBookCommand command){
        return repository.findById(command.getId())
                .map(book -> {

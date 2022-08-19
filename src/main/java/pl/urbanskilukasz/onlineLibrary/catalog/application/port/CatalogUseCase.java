@@ -27,6 +27,8 @@ public interface CatalogUseCase {
 
     Optional<Book> findOneByTitle(String title);
 
+    Optional<Book> findById(Long id);
+
     @Value
     class CreateBookCommand{
         String title;
