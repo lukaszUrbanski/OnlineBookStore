@@ -1,4 +1,4 @@
-package pl.urbanskilukasz.onlineLibrary.web;
+package pl.urbanskilukasz.onlineLibrary.catalog.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @RequestMapping("/catalog")
@@ -73,16 +72,16 @@ public class CatalogController {
     @Data
     private static class RestCreateBookCommand{
 
-        @NotBlank
+        @NotBlank(message = "Please provide a title")
         private String title;
 
-        @NotBlank
+        @NotBlank(message = "Please provide an author")
         private String author;
 
         @NotNull
         private Integer year;
 
-        @DecimalMin("0.00")
+        @DecimalMin(value = "0.00", message =  "Price must be greater than or equal to 0.00")
         private BigDecimal price;
 
         CreateBookCommand toCommand(){
