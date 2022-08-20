@@ -11,23 +11,25 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
+    void addBook(CreateBookCommand command);
+
+    List<Book> findAll();
+
     List<Book> findByTitle(String title);
 
     List<Book> findByAuthor(String author);
 
-    List<Book> findAll();
+    List<Book> findByAuthorAndTitle(String author, String title);
 
-    void addBook(CreateBookCommand command);
+    Optional<Book> findById(Long id);
 
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
+
+    Optional<Book> findOneByTitle(String title);
 
     UpdateBookResponse updateBook(UpdateBookCommand command);
 
     void removeById(Long id);
-
-    Optional<Book> findOneByTitle(String title);
-
-    Optional<Book> findById(Long id);
 
     @Value
     class CreateBookCommand{

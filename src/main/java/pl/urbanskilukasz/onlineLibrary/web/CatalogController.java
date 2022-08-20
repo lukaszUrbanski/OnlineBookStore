@@ -8,6 +8,8 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RequestMapping("/catalog")
@@ -19,8 +21,25 @@ public class CatalogController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)// default value
-    public List<Book> findAll(){
-        return catalog.findAll();
+    public List<Book> findAll(
+            @RequestParam Optional<String> title,
+            @RequestParam Optional<String> author,
+            @RequestParam(defaultValue = "10") int limit
+    ){
+        if (title.isPresent() && author.isPresent()){
+            return catalog.findByAuthorAndTitle(author.get(), title.get()); // todo: resolve problem with searching by title and author
+        }else if (title.isPresent()) {
+            return catalog.findByTitle(title.get());
+        }else if (author.isPresent()){
+            return catalog.findByAuthor(author.get());
+        }
+        return catalog.findAll().stream().limit(limit).collect(Collectors.toList());
+    }
+
+    @GetMapping(params = {"title"})
+    @ResponseStatus(HttpStatus.OK)// default value
+    public List<Book> findAllFiltered(@RequestParam String title){
+        return catalog.findByTitle(title);
     }
 
     @GetMapping("/{id}")

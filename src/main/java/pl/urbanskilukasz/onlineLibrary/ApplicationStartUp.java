@@ -93,9 +93,9 @@ public class ApplicationStartUp implements CommandLineRunner {
     }
 
     private void dataInit() {
-        catalog.addBook(new CreateBookCommand("Harry Pootter and the Philosopher's Stone", "J. K. Rowling", 1997, new BigDecimal("34.99")));
-        catalog.addBook(new CreateBookCommand("Harry Pootter and the Camber of Secret", "J. K. Rowling", 1998, new BigDecimal("34.99")));
-        catalog.addBook(new CreateBookCommand("Harry Pootter and the Prisoner of Azcaban", "J. K. Rowling", 1999, new BigDecimal("34.99")));
+        catalog.addBook(new CreateBookCommand("Harry Potter and the Philosopher's Stone", "J. K. Rowling", 1997, new BigDecimal("34.99")));
+        catalog.addBook(new CreateBookCommand("Harry Potter and the Camber of Secret", "J. K. Rowling", 1998, new BigDecimal("34.99")));
+        catalog.addBook(new CreateBookCommand("Harry Potter and the Prisoner of Azcaban", "J. K. Rowling", 1999, new BigDecimal("34.99")));
         catalog.addBook(new CreateBookCommand("The Lord of the Rings: The Fellowship of the Ring", "J. R. R. Tolkien", 1954, new BigDecimal("24.99")));
         catalog.addBook(new CreateBookCommand("The Lord of the Rings: Two towers", "J. R. R. Tolkien", 1954, new BigDecimal("24.99")));
         catalog.addBook(new CreateBookCommand("The Lord of the Rings: The Return of the King", "J. R. R. Tolkien", 1954, new BigDecimal("24.99")));
