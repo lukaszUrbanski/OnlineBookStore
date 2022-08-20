@@ -9,6 +9,10 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.CreateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +60,7 @@ public class CatalogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBook(@RequestBody RestCreateBookCommand restCommand){
+    public void createBook(@Valid @RequestBody RestCreateBookCommand restCommand){
         catalog.addBook(restCommand.toCommand());
     }
 
@@ -68,9 +72,17 @@ public class CatalogController {
 
     @Data
     private static class RestCreateBookCommand{
+
+        @NotBlank
         private String title;
+
+        @NotBlank
         private String author;
+
+        @NotNull
         private Integer year;
+
+        @DecimalMin("0.00")
         private BigDecimal price;
 
         CreateBookCommand toCommand(){
