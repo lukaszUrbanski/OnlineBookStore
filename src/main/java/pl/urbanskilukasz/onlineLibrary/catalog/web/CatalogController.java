@@ -25,7 +25,7 @@ public class CatalogController {
     private final CatalogUseCase catalog;
 
 
-    @GetMapping
+    @GetMapping(params = {"title", "author"})
     @ResponseStatus(HttpStatus.OK)// default value
     public List<Book> findAll(
             @RequestParam Optional<String> title,
@@ -33,7 +33,7 @@ public class CatalogController {
            // @RequestParam(defaultValue = "10") int limit
     ){
         if (title.isPresent() && author.isPresent()){
-            return catalog.findByAuthorAndTitle(author.get(), title.get()); // todo: resolve problem with searching by title and author
+            return catalog.findByAuthorAndTitle(author.get(), title.get());
         }else if (title.isPresent()) {
             return catalog.findByTitle(title.get());
         }else if (author.isPresent()){

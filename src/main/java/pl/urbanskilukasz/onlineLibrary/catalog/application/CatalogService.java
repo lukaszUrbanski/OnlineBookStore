@@ -1,7 +1,6 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.application;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
@@ -9,7 +8,6 @@ import pl.urbanskilukasz.onlineLibrary.catalog.domain.CatalogRepository;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,8 +38,8 @@ class CatalogService implements CatalogUseCase {
     public List<Book> findByAuthorAndTitle(String author, String title) {
         return repository.findAll()
                 .stream()
+//                .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
                 .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
-                .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
