@@ -5,8 +5,10 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.CreateBookCommand;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
 import javax.validation.Valid;
@@ -59,8 +61,18 @@ public class CatalogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBook(@Valid @RequestBody RestCreateBookCommand restCommand){
+    public void createBook(@Valid @RequestBody CatalogController.RestBookCommand restCommand){
         catalog.addBook(restCommand.toCommand());
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateBook(@PathVariable Long id ,@RequestBody RestBookCommand restCommand){
+        CatalogUseCase.UpdateBookResponse response = catalog.updateBook(restCommand.toUpdateCommand(id));
+        if(!response.isSuccess()){
+            String message = String.join(", ", response.getErrors());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -70,7 +82,7 @@ public class CatalogController {
     }
 
     @Data
-    private static class RestCreateBookCommand{
+    private static class RestBookCommand {
 
         @NotBlank(message = "Please provide a title")
         private String title;
@@ -88,5 +100,8 @@ public class CatalogController {
             return  new CreateBookCommand(title, author, year, price);
         }
 
+        UpdateBookCommand toUpdateCommand(Long id) {
+            return new UpdateBookCommand(id, title, author, year, price);
+        }
     }
 }
