@@ -18,7 +18,7 @@ class CatalogService implements CatalogUseCase {
     private final CatalogRepository repository;
 
     @Override
-    public List<Book> findByTitle(String title){
+    public List<Book> findByTitle(String title) {
         return repository.findAll()
                 .stream()
                 .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
@@ -27,7 +27,7 @@ class CatalogService implements CatalogUseCase {
 
 
     @Override
-    public List<Book> findByAuthor(String author){
+    public List<Book> findByAuthor(String author) {
         return repository.findAll()
                 .stream()
                 .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
@@ -44,7 +44,7 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public List<Book> findAll(){
+    public List<Book> findAll() {
         return repository.findAll();
     }
 
@@ -55,7 +55,7 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public Optional<Book> findOneByTitleAndAuthor(String title, String author){
+    public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
         return repository.findAll()
                 .stream()
                 .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
@@ -64,8 +64,18 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public void removeById(Long id){
+    public void removeById(Long id) {
         repository.removeById(id);
+    }
+
+    @Override
+    public void updateBookCover(UpdateBookCoverCommand command) {
+        int length = command.getFile().length;
+        System.out.println("Received cover command: " + command.getFileName() + " bytes : " + length);
+        repository.findById(command.getId())
+                .ifPresent(book -> {
+//                    book.setCoverId();
+                });
     }
 
     @Override
@@ -83,13 +93,13 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
-    public UpdateBookResponse updateBook(UpdateBookCommand command){
-       return repository.findById(command.getId())
-               .map(book -> {
-                   Book updatedBook =  command.updateFields(book);
-                   repository.save(updatedBook);
-                   return UpdateBookResponse.SUCCESS;
-               })
-                .orElseGet(()-> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));
+    public UpdateBookResponse updateBook(UpdateBookCommand command) {
+        return repository.findById(command.getId())
+                .map(book -> {
+                    Book updatedBook = command.updateFields(book);
+                    repository.save(updatedBook);
+                    return UpdateBookResponse.SUCCESS;
+                })
+                .orElseGet(() -> new UpdateBookResponse(false, Arrays.asList("Book not found with id: " + command.getId())));
     }
 }
