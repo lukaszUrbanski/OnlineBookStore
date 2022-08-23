@@ -12,6 +12,8 @@ public interface UploadUseCase {
 
     Optional<Upload> getById(String id);
 
+    void removeById(String coverId);
+
     @Value
     @AllArgsConstructor
     class SaveUploadCommand {
