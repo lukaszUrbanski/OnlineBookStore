@@ -5,13 +5,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
-import pl.urbanskilukasz.onlineLibrary.order.application.PlaceOrderService;
+import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderUseCaseService;
 import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.PlaceOrderUseCase;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.PlaceOrderUseCase.PlaceOrderCommand;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.PlaceOrderUseCase.PlaceOrderResponse;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
+import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
+import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
+import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import java.math.BigDecimal;
@@ -23,7 +21,7 @@ import static pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUs
 public class ApplicationStartUp implements CommandLineRunner {
 
     private final CatalogUseCase catalog;
-    private final PlaceOrderService placeOrder;
+    private final ManipulateOrderUseCaseService placeOrder;
     private final QueryOrderService queryOrder;
 
     private final String title;
@@ -31,7 +29,7 @@ public class ApplicationStartUp implements CommandLineRunner {
 
     public ApplicationStartUp(
             CatalogUseCase catalog,
-            PlaceOrderService placeOrder,
+            ManipulateOrderUseCaseService placeOrder,
             QueryOrderService queryOrder,
             @Value("${onlineLibrary.catalog.query.title:Lord}") String title,
             @Value("${onlineLibrary.catalog.query.author:Rowling}") String author
@@ -67,8 +65,8 @@ public class ApplicationStartUp implements CommandLineRunner {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .item(new OrderItem(panTadeusz, 16))
-                .item(new OrderItem(chlopi, 7))
+                .item(new OrderItemCommand(0L , 16))
+                .item(new OrderItemCommand(1L, 7))
                 .build();
 
         PlaceOrderResponse response = placeOrder.placeOrder(command);

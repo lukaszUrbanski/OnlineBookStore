@@ -12,6 +12,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.CreateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCoverCommand;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookResponse;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
 import javax.validation.Valid;
@@ -50,11 +51,11 @@ public class CatalogController {
         // return catalog.findAll().stream().limit(limit).collect(Collectors.toList());
     }
 
-    @GetMapping(params = {"title"})
-    @ResponseStatus(HttpStatus.OK)// default value
-    public List<Book> findAllFiltered(@RequestParam String title) {
-        return catalog.findByTitle(title);
-    }
+//    @GetMapping(params = {"title"})
+//    @ResponseStatus(HttpStatus.OK)// default value
+//    public List<Book> findAllFiltered(@RequestParam String title) {
+//        return catalog.findByTitle(title);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
@@ -73,7 +74,7 @@ public class CatalogController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateBook(@PathVariable Long id, @RequestBody RestBookCommand restCommand) {
-        CatalogUseCase.UpdateBookResponse response = catalog.updateBook(restCommand.toUpdateCommand(id));
+        UpdateBookResponse response = catalog.updateBook(restCommand.toUpdateCommand(id));
         if (!response.isSuccess()) {
             String message = String.join(", ", response.getErrors());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
@@ -101,6 +102,8 @@ public class CatalogController {
     public void removeBookCover(@PathVariable Long id){
         catalog.removeBookCover(id);
     }
+
+
     @Data
     private static class RestBookCommand {
 
@@ -124,4 +127,6 @@ public class CatalogController {
             return new UpdateBookCommand(id, title, author, year, price);
         }
     }
+
+
 }
