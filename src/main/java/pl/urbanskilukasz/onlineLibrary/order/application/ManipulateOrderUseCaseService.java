@@ -4,30 +4,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
+import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderRepository;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
-    private final OrderRepository orderRepository;
+    private final OrderJpaRepository orderRepository;
     private final BookJpaRepository catalogRepository;
 
     @Override
     public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {
-        List<OrderItem> items = command.getItems()
-                .stream()
-                .map(item -> new OrderItem(
-                        catalogRepository.findById(item.getBookId()).get(),
-                        item.getQuantity()))
-                .collect(Collectors.toList());
+
         Order order = Order
                 .builder()
-                .items(items)
+                .items(command.getItems())
                 .recipient(command.getRecipient())
                 .build();
         Order save = orderRepository.save(order);
@@ -45,7 +36,7 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
 
     @Override
     public void deleteOrder(Long id) {
-        orderRepository.deleteOrder(id);
+        orderRepository.deleteById(id);
     }
 
 }

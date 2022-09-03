@@ -23,7 +23,7 @@ public interface ManipulateOrderUseCase {
     @AllArgsConstructor
     class PlaceOrderCommand{
         @Singular
-        List<OrderItemCommand> items;
+        List<OrderItem> items;
         Recipient recipient;
     }
 

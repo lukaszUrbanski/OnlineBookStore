@@ -12,6 +12,7 @@ import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUse
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.UpdateOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
+import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class OrderController {
     }
     @Data
     private static class RestOrderCommand{
-        List<OrderItemCommand> restItems;
+        List<OrderItem> restItems;
         Recipient recipient;
 
         public PlaceOrderCommand toCommand(){

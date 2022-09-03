@@ -10,6 +10,7 @@ import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
+import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import java.math.BigDecimal;
@@ -65,17 +66,17 @@ public class ApplicationStartUp implements CommandLineRunner {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .item(new OrderItemCommand(1L , 16))
-                .item(new OrderItemCommand(2L, 7))
+                .item(new OrderItem(panTadeusz.getId(), 16))
+                .item(new OrderItem(chlopi.getId(), 7))
                 .build();
 
         PlaceOrderResponse response = placeOrder.placeOrder(command);
         System.out.println("Placed order with id: " + response.getOrderId());
 
-        queryOrder.findAll()
-                .forEach(order -> {
-                    System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order);
-                });
+//        queryOrder.findAll()
+//                .forEach(order -> {
+//                    System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order);
+//                });
     }
 
     private void searchCatalog() {
