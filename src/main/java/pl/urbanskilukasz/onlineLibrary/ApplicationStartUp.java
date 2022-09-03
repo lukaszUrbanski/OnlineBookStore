@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderUseCaseService;
 import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
@@ -65,8 +65,8 @@ public class ApplicationStartUp implements CommandLineRunner {
         PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .item(new OrderItemCommand(0L , 16))
-                .item(new OrderItemCommand(1L, 7))
+                .item(new OrderItemCommand(1L , 16))
+                .item(new OrderItemCommand(2L, 7))
                 .build();
 
         PlaceOrderResponse response = placeOrder.placeOrder(command);

@@ -13,13 +13,12 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.C
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCoverCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookResponse;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;

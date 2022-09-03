@@ -3,7 +3,7 @@ package pl.urbanskilukasz.onlineLibrary.catalog.application.port;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
 
 import java.math.BigDecimal;
 import java.util.List;

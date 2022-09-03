@@ -3,8 +3,8 @@ package pl.urbanskilukasz.onlineLibrary.catalog.application;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.CatalogRepository;
+import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
+import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase;
 import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase.SaveUploadCommand;
 import pl.urbanskilukasz.onlineLibrary.uploads.domain.Upload;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 class CatalogService implements CatalogUseCase {
 
-    private final CatalogRepository repository;
+    private final BookJpaRepository repository;
     private final UploadUseCase upload;
 
     @Override
@@ -69,7 +69,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void removeById(Long id) {
-        repository.removeById(id);
+        repository.deleteById(id);
     }
 
     @Override

@@ -2,7 +2,7 @@ package pl.urbanskilukasz.onlineLibrary.order.application;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.urbanskilukasz.onlineLibrary.catalog.domain.CatalogRepository;
+import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     private final OrderRepository orderRepository;
-    private final CatalogRepository catalogRepository;
+    private final BookJpaRepository catalogRepository;
 
     @Override
     public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {
