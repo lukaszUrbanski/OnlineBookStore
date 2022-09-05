@@ -20,7 +20,7 @@ public class Book {
     private String author;
     private Integer year;
     private BigDecimal price;
-    private String coverId;
+    private Long coverId;
 
     public Book(String title, String author, int year, BigDecimal price) {
         this.title = title;
