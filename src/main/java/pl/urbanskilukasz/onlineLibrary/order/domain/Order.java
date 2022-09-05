@@ -1,6 +1,10 @@
 package pl.urbanskilukasz.onlineLibrary.order.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
 
@@ -30,12 +35,10 @@ public class Order {
 
     private transient Recipient recipient;
 
+    @CreatedDate
     private LocalDateTime createdAt;
 
-//    public BigDecimal totalPrice() {
-//        return items.stream()
-//                .map(item -> item.getBook().getPrice().multiply(new BigDecimal(item.getQuantity())))
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//    }
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
 }
