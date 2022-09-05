@@ -55,7 +55,7 @@ public class ApplicationStartUp implements CommandLineRunner {
 
         Recipient recipient = Recipient
                 .builder()
-                .name(" JAn Kowalski")
+                .name(" Jan Kowalski")
                 .phone("123-234-456")
                 .city("Toruń")
                 .street("Długa 123")
