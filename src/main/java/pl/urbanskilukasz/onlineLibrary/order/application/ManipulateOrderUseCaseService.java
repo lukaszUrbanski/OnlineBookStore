@@ -11,7 +11,6 @@ import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 @AllArgsConstructor
 public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     private final OrderJpaRepository orderRepository;
-    private final BookJpaRepository catalogRepository;
 
     @Override
     public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {

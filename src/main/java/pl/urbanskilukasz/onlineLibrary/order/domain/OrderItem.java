@@ -3,7 +3,6 @@ package pl.urbanskilukasz.onlineLibrary.order.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
