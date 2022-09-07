@@ -3,8 +3,10 @@ package pl.urbanskilukasz.onlineLibrary.catalog.application;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
+import pl.urbanskilukasz.onlineLibrary.catalog.db.AuthorJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
-import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Author;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase;
 import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase.SaveUploadCommand;
 import pl.urbanskilukasz.onlineLibrary.uploads.domain.Upload;
@@ -12,6 +14,7 @@ import pl.urbanskilukasz.onlineLibrary.uploads.domain.Upload;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 class CatalogService implements CatalogUseCase {
 
     private final BookJpaRepository repository;
+    private final AuthorJpaRepository authorRepository;
     private final UploadUseCase upload;
 
     @Override
@@ -34,7 +38,7 @@ class CatalogService implements CatalogUseCase {
     public List<Book> findByAuthor(String author) {
         return repository.findAll()
                 .stream()
-                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
+//                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
@@ -42,8 +46,8 @@ class CatalogService implements CatalogUseCase {
     public List<Book> findByAuthorAndTitle(String author, String title) {
         return repository.findAll()
                 .stream()
-//                .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
+                .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
+//                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
@@ -54,15 +58,28 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void addBook(CreateBookCommand command) {
-        Book book = command.toBook();
+        Book book = toBook(command);
         repository.save(book);
+    }
+    private Book toBook(CreateBookCommand command){
+        Book book = new Book(command.getTitle(), command.getYear(), command.getPrice());
+        Set<Author> authors = command.getAuthors()
+                .stream()
+                .map(authorId -> authorRepository
+                        .findById(authorId)
+                        .orElseThrow(() -> new IllegalArgumentException("Unable to find an author with ID: " + authorId)))
+                .collect(Collectors.toSet());
+//        Set<Long> authorIds = command.getAuthors();
+//        Set<Author> authors = Set.copyOf(authorRepository.findAllById(authorIds));
+        book.setAuthors(authors);
+        return book;
     }
 
     @Override
     public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
         return repository.findAll()
                 .stream()
-                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
+//                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
                 .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
                 .findFirst();
     }

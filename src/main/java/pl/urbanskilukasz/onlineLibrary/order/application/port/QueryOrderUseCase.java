@@ -1,8 +1,8 @@
 package pl.urbanskilukasz.onlineLibrary.order.application.port;
 
+import lombok.Data;
 import lombok.Value;
-import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 

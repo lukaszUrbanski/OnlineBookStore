@@ -2,7 +2,7 @@ package pl.urbanskilukasz.onlineLibrary.order.application;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;

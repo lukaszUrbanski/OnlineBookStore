@@ -13,7 +13,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.C
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookCoverCommand;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.UpdateBookResponse;
-import pl.urbanskilukasz.onlineLibrary.catalog.application.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RequestMapping("/catalog")
@@ -109,8 +110,8 @@ public class CatalogController {
         @NotBlank(message = "Please provide a title")
         private String title;
 
-        @NotBlank(message = "Please provide an author")
-        private String author;
+//        @NotBlank(message = "Please provide an author")
+        private Set<Long> authors;
 
         @NotNull
         private Integer year;
@@ -119,11 +120,11 @@ public class CatalogController {
         private BigDecimal price;
 
         CreateBookCommand toCommand() {
-            return new CreateBookCommand(title, author, year, price);
+            return new CreateBookCommand(title, Set.of(), year, price);
         }
 
         UpdateBookCommand toUpdateCommand(Long id) {
-            return new UpdateBookCommand(id, title, author, year, price);
+            return new UpdateBookCommand(id, title, Set.of(), year, price);
         }
     }
 
