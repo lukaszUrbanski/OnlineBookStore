@@ -1,5 +1,6 @@
 package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +23,8 @@ public class Book {
     private Long coverId;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
+//    @JoinTable
+    @JsonIgnoreProperties("books")
     private Set<Author> authors;
 
     public Book(String title, int year, BigDecimal price) {

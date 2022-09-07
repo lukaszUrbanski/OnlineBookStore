@@ -48,14 +48,7 @@ public class CatalogController {
             return catalog.findByAuthor(author.get());
         }
         return catalog.findAll();
-        // return catalog.findAll().stream().limit(limit).collect(Collectors.toList());
     }
-
-//    @GetMapping(params = {"title"})
-//    @ResponseStatus(HttpStatus.OK)// default value
-//    public List<Book> findAllFiltered(@RequestParam String title) {
-//        return catalog.findByTitle(title);
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
@@ -120,11 +113,11 @@ public class CatalogController {
         private BigDecimal price;
 
         CreateBookCommand toCommand() {
-            return new CreateBookCommand(title, Set.of(), year, price);
+            return new CreateBookCommand(title,authors, year, price);
         }
 
         UpdateBookCommand toUpdateCommand(Long id) {
-            return new UpdateBookCommand(id, title, Set.of(), year, price);
+            return new UpdateBookCommand(id, title, authors, year, price);
         }
     }
 
