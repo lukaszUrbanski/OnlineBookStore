@@ -2,6 +2,7 @@ package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,16 +13,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @ToString(exclude = "books")
-public class Author {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Author  extends BaseEntity {
     private String firstName;
     private String lastName;
 
     @ManyToMany(
             fetch = FetchType.EAGER,
-//            cascade = CascadeType.MERGE,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "authors")
     @JsonIgnoreProperties("authors")
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -17,11 +18,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Upload {
+public class Upload  extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+
     private byte[] file;
     private String fileName;
     private String contentType;

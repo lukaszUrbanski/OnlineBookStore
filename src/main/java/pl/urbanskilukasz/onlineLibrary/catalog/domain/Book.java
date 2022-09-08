@@ -2,31 +2,29 @@ package pl.urbanskilukasz.onlineLibrary.catalog.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @ToString(exclude = "authors")
-public class Book {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Book extends BaseEntity {
     private String title;
     private Integer year;
     private BigDecimal price;
     private Long coverId;
 
     @ManyToMany(
-            fetch = FetchType.EAGER)
-//            cascade = CascadeType.MERGE)
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable
     @JsonIgnoreProperties("books")
     private Set<Author> authors = new HashSet<>();

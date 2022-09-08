@@ -3,6 +3,7 @@ package pl.urbanskilukasz.onlineLibrary.order.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,16 +13,9 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderItem {
+public class OrderItem extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     private Long bookId;
     private Integer quantity;
 
-    public OrderItem(Long bookId, Integer quantity) {
-        this.bookId = bookId;
-        this.quantity = quantity;
-    }
 }
