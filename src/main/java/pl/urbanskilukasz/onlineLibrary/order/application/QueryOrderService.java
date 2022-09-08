@@ -9,6 +9,7 @@ import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ public class QueryOrderService implements QueryOrderUseCase {
     private final BookJpaRepository bookRepository;
 
     @Override
+    @Transactional
     public List<RichOrder> findAll() {
         return orderRepository.findAll()
                 .stream()
@@ -28,6 +30,7 @@ public class QueryOrderService implements QueryOrderUseCase {
     }
 
     @Override
+    @Transactional
     public Optional<RichOrder> findById(Long id) {
         return orderRepository.findById(id).map(this::toRichOrder);
     }

@@ -11,6 +11,7 @@ import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase;
 import pl.urbanskilukasz.onlineLibrary.uploads.application.port.UploadUseCase.SaveUploadCommand;
 import pl.urbanskilukasz.onlineLibrary.uploads.domain.Upload;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
+    @Transactional
     public void addBook(CreateBookCommand command) {
         Book book = toBook(command);
         repository.save(book);
