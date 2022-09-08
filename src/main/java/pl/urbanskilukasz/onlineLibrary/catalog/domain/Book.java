@@ -5,10 +5,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @ToString(exclude = "authors")
@@ -22,14 +24,31 @@ public class Book {
     private BigDecimal price;
     private Long coverId;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable
+    @ManyToMany(
+            fetch = FetchType.EAGER)
+//            cascade = CascadeType.MERGE)
+    @JoinTable
     @JsonIgnoreProperties("books")
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
     public Book(String title, int year, BigDecimal price) {
         this.title = title;
         this.year = year;
         this.price = price;
+    }
+
+    public void addAuthor(Author author){
+        authors.add(author);
+        author.getBooks().add(this);
+    }
+    public void removeAuthor(Author author){
+        authors.remove(author);
+        author.getBooks().remove(author);
+    }
+
+    public void removeAuthors(){
+        Book self = this;
+        authors.forEach(author -> author.getBooks().remove(self));
+        authors.clear();
     }
 }
