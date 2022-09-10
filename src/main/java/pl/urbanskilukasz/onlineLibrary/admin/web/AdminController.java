@@ -1,41 +1,38 @@
-package pl.urbanskilukasz.onlineLibrary;
+package pl.urbanskilukasz.onlineLibrary.admin.web;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.AuthorJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Author;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderUseCaseService;
 import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
+import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
-import static pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.*;
-
-@Component
+@RestController
 @AllArgsConstructor
-public class ApplicationStartUp implements CommandLineRunner {
-
+@RequestMapping("/admin")
+public class AdminController {
     private final CatalogUseCase catalog;
     private final ManipulateOrderUseCaseService placeOrder;
     private final QueryOrderService queryOrder;
-
     private final AuthorJpaRepository authorRepository;
-    @Override
-    public void run(String... args) {
+
+    @PostMapping("/data")
+    @Transactional
+    public void initData(){
         dataInit();
         placeOrder();
     }
-
     private void placeOrder() {
         Book effectiveJava = catalog.findOneByTitle("Effective Java").orElseThrow(() -> new IllegalStateException("Cannot find a book."));
         Book javaPuzzlers = catalog.findOneByTitle("Java Puzzlers").orElseThrow(() -> new IllegalStateException("Cannot find a book."));
@@ -50,14 +47,14 @@ public class ApplicationStartUp implements CommandLineRunner {
                 .email("jan@example.pl")
                 .build();
 
-        PlaceOrderCommand command = PlaceOrderCommand
+        ManipulateOrderUseCase.PlaceOrderCommand command = ManipulateOrderUseCase.PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
                 .item(new OrderItem(effectiveJava.getId(), 16))
                 .item(new OrderItem(javaPuzzlers.getId(), 7))
                 .build();
 
-        PlaceOrderResponse response = placeOrder.placeOrder(command);
+        ManipulateOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
         System.out.println("Placed order with id: " + response.getOrderId());
 
         queryOrder.findAll()
@@ -73,13 +70,13 @@ public class ApplicationStartUp implements CommandLineRunner {
         authorRepository.save(joshua);
         authorRepository.save(neal);
 
-        CreateBookCommand effectiveJava = new CreateBookCommand(
+        CatalogUseCase.CreateBookCommand effectiveJava = new CatalogUseCase.CreateBookCommand(
                 "Effective Java",
                 Set.of(neal.getId()),
                 2005,
                 new BigDecimal("79.99")
         );
-        CreateBookCommand javaPuzzlers = new CreateBookCommand(
+        CatalogUseCase.CreateBookCommand javaPuzzlers = new CatalogUseCase.CreateBookCommand(
                 "Java Puzzlers",
                 Set.of(joshua.getId(), neal.getId()),
                 2013,
@@ -101,5 +98,6 @@ public class ApplicationStartUp implements CommandLineRunner {
 //        catalog.addBook(new CreateBookCommand("Chłopi",null, 1999, new BigDecimal("13.99")));
 //        catalog.addBook(new CreateBookCommand("Pan Wołodyjowski", null, 1954, new BigDecimal("12.99")));
     }
+
 
 }
