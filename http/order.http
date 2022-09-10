@@ -1,4 +1,11 @@
-###
+### Initialize Data
+POST http://localhost:8080/admin/data
+
+
+### Catalog
+GET http://localhost:8080/catalog
+
+### Place Order
 POST http://localhost:8080/orders
 Content-Type: application/json
 
@@ -9,7 +16,7 @@ Content-Type: application/json
       "quantity": 2
     },
     {
-      "bookId": 1,
+      "bookId": 4,
       "quantity": 1
     }
   ],
@@ -23,14 +30,14 @@ Content-Type: application/json
   }
 }
 
-###
+### Get orders
 GET http://localhost:8080/orders
 
-###
-PUT http://localhost:8080/orders/13/status
+### Update Order Status
+PUT http://localhost:8080/orders/5/status
 Content-Type: application/json
 
 {
-  "status" : "CONFIRMED"
+  "status" : "PAID"
 }
 

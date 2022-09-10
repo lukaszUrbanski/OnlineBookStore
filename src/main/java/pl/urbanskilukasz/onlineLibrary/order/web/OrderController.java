@@ -5,16 +5,19 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.UpdateOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
+import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase.*;
 
 @RestController
@@ -48,7 +51,9 @@ public class OrderController {
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateStatus(@PathVariable Long id, @RequestBody RestUpdateOrderCommand updateOrderCommand){
-        manipulateOrderUseCase.updateOrder(updateOrderCommand.toCommand(id));
+        OrderStatus orderStatus = OrderStatus.parseString(updateOrderCommand.status)
+                .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Unknown status: " + updateOrderCommand.status));
+        manipulateOrderUseCase.updateOrderStatus(id, orderStatus);
     }
 
     @DeleteMapping("/{id}")

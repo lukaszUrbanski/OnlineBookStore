@@ -6,6 +6,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
+import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +37,15 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     @Override
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateOrderStatus(Long id, OrderStatus status) {
+        orderRepository.findById(id)
+                .ifPresent(order -> {
+                   order.updateStatus(status);
+                   orderRepository.save(order);
+                });
     }
 
 }

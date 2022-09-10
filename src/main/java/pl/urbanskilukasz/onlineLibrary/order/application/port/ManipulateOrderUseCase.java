@@ -18,6 +18,8 @@ public interface ManipulateOrderUseCase {
 
     void deleteOrder(Long id);
 
+    void updateOrderStatus(Long id, OrderStatus orderStatus);
+
     @Builder
     @Value
     @AllArgsConstructor
