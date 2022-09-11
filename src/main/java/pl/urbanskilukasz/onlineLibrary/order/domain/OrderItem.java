@@ -3,11 +3,10 @@ package pl.urbanskilukasz.onlineLibrary.order.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +14,9 @@ import javax.persistence.Id;
 @Entity
 public class OrderItem extends BaseEntity {
 
-    private Long bookId;
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
     private Integer quantity;
 
 }

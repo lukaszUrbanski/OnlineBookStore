@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
+import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.UpdateOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,20 +24,19 @@ import static pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderU
 @RestController
 @RequestMapping("/orders")
 @AllArgsConstructor
+@Transactional
 public class OrderController {
     private final QueryOrderUseCase queryOrder;
-    private final ManipulateOrderUseCase manipulateOrderUseCase;
+    private final ManipulateOrderUseCase manipulateOrder;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<RichOrder> getOrders(){
+    public List<RichOrder> getOrders() {
         return queryOrder.findAll();
     }
 
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RichOrder> getOrderById(@PathVariable Long id){
+    public ResponseEntity<RichOrder> getOrderById(@PathVariable Long id) {
         return queryOrder.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,64 +44,41 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody RestOrderCommand restCommand){
-        manipulateOrderUseCase.placeOrder(restCommand.toPlaceOrderCommand());
+    public void createOrder(@RequestBody PlaceOrderCommand command) {
+        manipulateOrder.placeOrder(command);
     }
 
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateStatus(@PathVariable Long id, @RequestBody RestUpdateOrderCommand updateOrderCommand){
+    public void updateStatus(@PathVariable Long id, @RequestBody UpdateStatusCommand updateOrderCommand) {
         OrderStatus orderStatus = OrderStatus.parseString(updateOrderCommand.status)
                 .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Unknown status: " + updateOrderCommand.status));
-        manipulateOrderUseCase.updateOrderStatus(id, orderStatus);
+        manipulateOrder.updateOrderStatus(id, orderStatus);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long id){
-        manipulateOrderUseCase.deleteOrder(id);
+    public void deleteOrder(@PathVariable Long id) {
+        manipulateOrder.deleteOrder(id);
     }
+
     @Data
-    private static class RestOrderCommand{
+    private static class RestOrderCommand {
         List<OrderItemCommand> items;
-        RecipientCommand recipient;
+        Recipient recipient;
 
         PlaceOrderCommand toPlaceOrderCommand() {
-            List<OrderItem> orderItems = items
+            List<OrderItemCommand> orderItems = items
                     .stream()
-                    .map(item -> new OrderItem(item.bookId, item.quantity))
+                    .map(item -> new OrderItemCommand(item.getBookId(), item.getQuantity()))
                     .collect(Collectors.toList());
-            return new PlaceOrderCommand(orderItems, recipient.toRecipient());
-        }
-    }
-    @Data
-    static class OrderItemCommand {
-        Long bookId;
-        int quantity;
-    }
-    @Data
-    static class RecipientCommand {
-        String name;
-        String phone;
-        String street;
-        String city;
-        String zipCode;
-        String email;
-        Recipient toRecipient() {
-            return new Recipient(name, phone, street, city, zipCode, email);
+            return new PlaceOrderCommand(orderItems, recipient);
         }
     }
 
-
     @Data
-    private static class RestUpdateOrderCommand{
+    private static class UpdateStatusCommand {
         String status;
-
-        UpdateOrderCommand toCommand(Long id) {
-           return new UpdateOrderCommand(
-                    id,
-                    status
-            );
-        }
     }
 }
+

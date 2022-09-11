@@ -56,7 +56,7 @@ class CatalogService implements CatalogUseCase {
         repository.save(book);
     }
     private Book toBook(CreateBookCommand command){
-        Book book = new Book(command.getTitle(), command.getYear(), command.getPrice());
+        Book book = new Book(command.getTitle(), command.getYear(), command.getPrice(), command.getAvailable());
         Set<Author> authors = fetchAuthors(command.getAuthors());
         updateAuthors(book, authors);
         return book;
@@ -150,6 +150,9 @@ class CatalogService implements CatalogUseCase {
         }
         if(command.getPrice() != null){
             book.setPrice(command.getPrice());
+        }
+        if (command.getAvailable() != null){
+            book.setAvailable(command.getAvailable());
         }
         return book;
     }

@@ -18,6 +18,8 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import static pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.*;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/admin")
@@ -47,14 +49,14 @@ public class AdminController {
                 .email("jan@example.pl")
                 .build();
 
-        ManipulateOrderUseCase.PlaceOrderCommand command = ManipulateOrderUseCase.PlaceOrderCommand
+        PlaceOrderCommand command = PlaceOrderCommand
                 .builder()
                 .recipient(recipient)
-                .item(new OrderItem(effectiveJava.getId(), 16))
-                .item(new OrderItem(javaPuzzlers.getId(), 7))
+                .item(new OrderItemCommand(effectiveJava.getId(), 16))
+                .item(new OrderItemCommand(javaPuzzlers.getId(), 7))
                 .build();
 
-        ManipulateOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
+        PlaceOrderResponse response = placeOrder.placeOrder(command);
         System.out.println("Placed order with id: " + response.getOrderId());
 
         queryOrder.findAll()
@@ -74,13 +76,15 @@ public class AdminController {
                 "Effective Java",
                 Set.of(neal.getId()),
                 2005,
-                new BigDecimal("79.99")
+                new BigDecimal("79.99"),
+                50L
         );
         CatalogUseCase.CreateBookCommand javaPuzzlers = new CatalogUseCase.CreateBookCommand(
                 "Java Puzzlers",
                 Set.of(joshua.getId(), neal.getId()),
                 2013,
-                new BigDecimal("99.99")
+                new BigDecimal("99.99"),
+                50L
         );
 
         catalog.addBook(effectiveJava);

@@ -25,30 +25,30 @@ public interface ManipulateOrderUseCase {
     @AllArgsConstructor
     class PlaceOrderCommand{
         @Singular
-        List<OrderItem> items;
+        List<OrderItemCommand> items;
         Recipient recipient;
     }
 
-
-    @Value
-    class PlaceOrderResponse{
-        boolean response;
-        Long orderId;
-        List<String> errors;
-
-        public static PlaceOrderResponse success(Long orderId){
-            return new PlaceOrderResponse(true, orderId, emptyList());
-        }
-
-        public static PlaceOrderResponse failure(String... errors){
-            return new PlaceOrderResponse(false, null, Arrays.asList(errors));
-        }
-    }
     @Data
     @AllArgsConstructor
     class OrderItemCommand{
         Long bookId;
         int quantity;
+    }
+
+    @Value
+    class PlaceOrderResponse{
+        boolean response;
+        Long orderId;
+
+        List<String> errors;
+
+        public static PlaceOrderResponse success(Long orderId){
+            return new PlaceOrderResponse(true, orderId, emptyList());
+        }
+        public static PlaceOrderResponse failure(String... errors){
+            return new PlaceOrderResponse(false, null, Arrays.asList(errors));
+        }
     }
 
     @Data

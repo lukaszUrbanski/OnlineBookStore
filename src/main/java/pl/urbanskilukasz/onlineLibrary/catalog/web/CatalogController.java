@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -108,16 +109,19 @@ public class CatalogController {
 
         @NotNull
         private Integer year;
+        @NotNull
+        @PositiveOrZero
+        private Long available;
 
         @DecimalMin(value = "0.00", message = "Price must be greater than or equal to 0.00")
         private BigDecimal price;
 
         CreateBookCommand toCommand() {
-            return new CreateBookCommand(title,authors, year, price);
+            return new CreateBookCommand(title,authors, year, price, available );
         }
 
         UpdateBookCommand toUpdateCommand(Long id) {
-            return new UpdateBookCommand(id, title, authors, year, price);
+            return new UpdateBookCommand(id, title, authors, year, price, available);
         }
     }
 
