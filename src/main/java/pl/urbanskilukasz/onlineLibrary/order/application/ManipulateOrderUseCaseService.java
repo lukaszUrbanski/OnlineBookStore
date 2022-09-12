@@ -6,9 +6,11 @@ import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
+import pl.urbanskilukasz.onlineLibrary.order.db.RecipientJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
+import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     private final OrderJpaRepository orderRepository;
     private final BookJpaRepository bookRepository;
+    private final RecipientJpaRepository recipientRepository;
 
     @Override
     public PlaceOrderResponse placeOrder(PlaceOrderCommand command) {
@@ -31,13 +34,18 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
         Order order = Order
                 .builder()
                 .items(items)
-                .recipient(command.getRecipient())
+                .recipient(getOrCreateRecipient(command.getRecipient()))
                 .build();
         Order save = orderRepository.save(order);
         bookRepository.saveAll(updateBooks(items));
         return PlaceOrderResponse.success(save.getId());
     }
 
+    private Recipient getOrCreateRecipient(Recipient recipient){
+        return recipientRepository
+                .findByEmailIgnoreCase(recipient.getEmail())
+                .orElse(recipient);
+    }
     private Set<Book> updateBooks(Set<OrderItem> items) {
         return items
                 .stream()
