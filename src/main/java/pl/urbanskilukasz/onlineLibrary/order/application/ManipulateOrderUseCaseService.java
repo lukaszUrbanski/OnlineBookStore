@@ -7,10 +7,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.db.RecipientJpaRepository;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
+import pl.urbanskilukasz.onlineLibrary.order.domain.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,7 +34,7 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
                 .recipient(getOrCreateRecipient(command.getRecipient()))
                 .build();
         Order save = orderRepository.save(order);
-        bookRepository.saveAll(updateBooks(items));
+        bookRepository.saveAll(reduceBooks(items));
         return PlaceOrderResponse.success(save.getId());
     }
 
@@ -46,7 +43,7 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
                 .findByEmailIgnoreCase(recipient.getEmail())
                 .orElse(recipient);
     }
-    private Set<Book> updateBooks(Set<OrderItem> items) {
+    private Set<Book> reduceBooks(Set<OrderItem> items) {
         return items
                 .stream()
                 .map(item -> {
@@ -84,9 +81,22 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     public void updateOrderStatus(Long id, OrderStatus status) {
         orderRepository.findById(id)
                 .ifPresent(order -> {
-                   order.updateStatus(status);
-                   orderRepository.save(order);
+                    UpdateStatusResult result = order.updateStatus(status);
+                    if(result.isRevoked()) {
+                        bookRepository.saveAll(revokeBooks(order.getItems()));
+                    }
+                    orderRepository.save(order);
                 });
+    }
+    private Set<Book> revokeBooks(Set<OrderItem> items) {
+        return items
+                .stream()
+                .map(item -> {
+                    Book book = item.getBook();
+                    book.setAvailable(book.getAvailable() + item.getQuantity());
+                    return book;
+                })
+                .collect(Collectors.toSet());
     }
 
 }

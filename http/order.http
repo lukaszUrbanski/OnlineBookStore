@@ -34,10 +34,10 @@ Content-Type: application/json
 GET http://localhost:8080/orders
 
 ### Update Order Status
-PUT http://localhost:8080/orders/5/status
+PUT http://localhost:8080/orders/62/status
 Content-Type: application/json
 
 {
-  "status" : "PAID"
+  "status" : "CANCELED"
 }
 
