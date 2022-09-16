@@ -17,6 +17,7 @@ import java.util.UUID;
 @Entity
 @ToString(exclude = "authors")
 public class Book extends BaseEntity {
+    @Column(unique = true)
     private String title;
     private Integer year;
     private BigDecimal price;
