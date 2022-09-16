@@ -13,7 +13,7 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
-    void addBook(CreateBookCommand command);
+    Book addBook(CreateBookCommand command);
 
     List<Book> findAll();
 

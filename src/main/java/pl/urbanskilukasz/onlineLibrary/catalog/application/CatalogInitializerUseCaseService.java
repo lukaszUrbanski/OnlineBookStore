@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogInitializerUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.AuthorJpaRepository;
@@ -30,6 +33,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase.*;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -39,6 +44,7 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
     private final ManipulateOrderUseCaseService placeOrder;
     private final QueryOrderService queryOrder;
     private final AuthorJpaRepository authorRepository;
+    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -101,14 +107,22 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
                 .collect(Collectors.toSet());
 
 
-        CatalogUseCase.CreateBookCommand command = new CatalogUseCase.CreateBookCommand(
+        CreateBookCommand command = new CreateBookCommand(
                 csvBook.title,
                 authors,
                 csvBook.year,
                 csvBook.amount,
                 50L
         );
-        catalog.addBook(command);
+        Book book = catalog.addBook(command);
+        catalog.updateBookCover(updateBookCoverCommand(book.getId(), csvBook.thumbnail));
+    }
+
+    private UpdateBookCoverCommand updateBookCoverCommand(Long bookId, String thumbnailUrl) {
+        ResponseEntity<byte[]> response = restTemplate.exchange(thumbnailUrl, HttpMethod.GET, null, byte[].class);
+        String contentType = response.getHeaders().getContentType().toString();
+        return new UpdateBookCoverCommand(bookId, response.getBody() , contentType, "cover" + bookId);
+
     }
 
     private Author getOrCreateAuthor(String name) {
