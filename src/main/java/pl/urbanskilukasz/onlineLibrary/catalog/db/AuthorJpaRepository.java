@@ -6,5 +6,6 @@ import pl.urbanskilukasz.onlineLibrary.catalog.domain.Author;
 import java.util.Optional;
 
 public interface AuthorJpaRepository extends JpaRepository<Author, Long> {
+    Optional<Author> findByNameIgnoreCase(String name);
 
 }

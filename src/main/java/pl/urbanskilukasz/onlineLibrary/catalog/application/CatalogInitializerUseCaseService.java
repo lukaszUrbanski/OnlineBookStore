@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogInitializerUseCase;
@@ -14,6 +15,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUseCase;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.AuthorJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Author;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
+import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
 import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderUseCaseService;
 import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
@@ -24,7 +26,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -76,7 +80,7 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
 
     private void dataInit() {
         ClassPathResource resource = new ClassPathResource("books.csv");
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             CsvToBean<CsvBook> build = new CsvToBeanBuilder<CsvBook>(reader)
                     .withType(CsvBook.class)
                     .withIgnoreLeadingWhiteSpace(true)
@@ -89,14 +93,27 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
     }
 
     private void initBook(CsvBook csvBook) {
+        Set<Long> authors = Arrays.stream(csvBook.authors.split(","))
+                .filter(StringUtils::isNotBlank)
+                .map(String::trim)
+                .map(this::getOrCreateAuthor)
+                .map(BaseEntity::getId)
+                .collect(Collectors.toSet());
+
+
         CatalogUseCase.CreateBookCommand command = new CatalogUseCase.CreateBookCommand(
                 csvBook.title,
-                Set.of(),
+                authors,
                 csvBook.year,
                 csvBook.amount,
                 50L
         );
         catalog.addBook(command);
+    }
+
+    private Author getOrCreateAuthor(String name) {
+        return authorRepository.findByNameIgnoreCase(name)
+                .orElseGet(() -> authorRepository.save(new Author(name)));
     }
 
     @Data

@@ -14,8 +14,7 @@ import java.util.Set;
 @Entity
 @ToString(exclude = "books")
 public class Author  extends BaseEntity {
-    private String firstName;
-    private String lastName;
+    private String name;
 
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
@@ -24,9 +23,8 @@ public class Author  extends BaseEntity {
 
     private Set<Book> books = new HashSet<>();
 
-    public Author(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Author(String name) {
+        this.name = name;
     }
 
     public void addBook(Book book){
