@@ -74,16 +74,12 @@ class CatalogService implements CatalogUseCase {
                         .findById(authorId)
                         .orElseThrow(() -> new IllegalArgumentException("Unable to find an author with ID: " + authorId)))
                 .collect(Collectors.toSet());
-//        Set<Long> authorIds = command.getAuthors();
-//        Set<Author> authors = Set.copyOf(authorRepository.findAllById(authorIds));
-
     }
 
     @Override
     public Optional<Book> findOneByTitleAndAuthor(String title, String author) {
         return repository.findAll()
                 .stream()
-//                .filter(book -> book.getAuthor().toLowerCase().contains(author.toLowerCase()))
                 .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
                 .findFirst();
     }
@@ -102,7 +98,6 @@ class CatalogService implements CatalogUseCase {
                     ));
                     book.setCoverId(savedUpload.getId());
                     repository.save(book);
-
                 });
     }
 

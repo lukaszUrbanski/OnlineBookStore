@@ -9,8 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.UpdateOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
+import pl.urbanskilukasz.onlineLibrary.order.application.RichOrder;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase.*;
 
 @RestController
 @RequestMapping("/orders")
