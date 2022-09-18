@@ -23,7 +23,7 @@ public interface ManipulateOrderUseCase {
     @Builder
     @Value
     @AllArgsConstructor
-    class PlaceOrderCommand{
+    class PlaceOrderCommand {
         @Singular
         List<OrderItemCommand> items;
         Recipient recipient;
@@ -31,40 +31,41 @@ public interface ManipulateOrderUseCase {
 
     @Data
     @AllArgsConstructor
-    class OrderItemCommand{
+    class OrderItemCommand {
         Long bookId;
         int quantity;
     }
 
+    @Getter
     @Value
-    class PlaceOrderResponse{
+    class PlaceOrderResponse {
         boolean response;
         Long orderId;
 
         List<String> errors;
 
-        public static PlaceOrderResponse success(Long orderId){
+        public static PlaceOrderResponse success(Long orderId) {
             return new PlaceOrderResponse(true, orderId, emptyList());
         }
-        public static PlaceOrderResponse failure(String... errors){
+
+        public static PlaceOrderResponse failure(String... errors) {
             return new PlaceOrderResponse(false, null, Arrays.asList(errors));
         }
     }
 
     @Data
     @AllArgsConstructor
-    class UpdateOrderCommand{
+    class UpdateOrderCommand {
         Long id;
         String status;
 
-        public Order updateOrder(Order order){
-            if (status != null){
+        public Order updateOrder(Order order) {
+            if (status != null) {
                 order.setStatus(OrderStatus.valueOf(status.toUpperCase()));
             }
             return order;
         }
     }
-
 
 
 }
