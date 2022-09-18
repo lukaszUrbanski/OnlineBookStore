@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrdersProperties;
 
 @SpringBootApplication
-@EnableJpaAuditing
 @EnableScheduling
 @EnableConfigurationProperties(OrdersProperties.class)
 public class OnlineLibraryApplication {
