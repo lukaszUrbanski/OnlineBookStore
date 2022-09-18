@@ -3,7 +3,9 @@ package pl.urbanskilukasz.onlineLibrary.order.application;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
@@ -43,6 +45,24 @@ class ManipulateOrderUseCaseServiceTest {
         //then
         Assertions.assertTrue
                 (response.isResponse());
+    }
+    @Test
+    public void userCantOrderMoreBookThanIsAvailable() {
+        //given
+        Book currencyJava = givenJavaCurrency(5L);
+
+        PlaceOrderCommand command = PlaceOrderCommand
+                .builder()
+                .recipient(recipient())
+                .item(new OrderItemCommand(currencyJava.getId(), 10))
+                .build();
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            orderUseCase.placeOrder(command);
+        });
+
+        //then
+        Assertions.assertTrue(exception.getMessage().contains("Too many copies of book "+ currencyJava.getId() +" requested"));
     }
 
     private Book givenEffectiveJava(Long available) {
