@@ -76,12 +76,17 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
                 .build();
 
         ManipulateOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
-        log.info("Placed order with id: " + response.getOrderId());
+        String result = response.handle(
+                orderId -> "Created ORDER with id: " + orderId,
+                error -> "Failed to created order: " + error
+        );
+        log.info(result);
+        //log.info("Placed order with id: " + response.getOrderId());
 
         queryOrder.findAll()
-                .forEach(order -> {
-                    log.info("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order);
-                });
+                .forEach(order ->
+                        log.info("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order));
+
     }
 
     private void dataInit() {
@@ -121,7 +126,7 @@ public class CatalogInitializerUseCaseService implements CatalogInitializerUseCa
     private UpdateBookCoverCommand updateBookCoverCommand(Long bookId, String thumbnailUrl) {
         ResponseEntity<byte[]> response = restTemplate.exchange(thumbnailUrl, HttpMethod.GET, null, byte[].class);
         String contentType = response.getHeaders().getContentType().toString();
-        return new UpdateBookCoverCommand(bookId, response.getBody() , contentType, "cover" + bookId);
+        return new UpdateBookCoverCommand(bookId, response.getBody(), contentType, "cover" + bookId);
 
     }
 

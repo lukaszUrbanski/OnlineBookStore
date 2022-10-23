@@ -64,29 +64,23 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     }
 
     @Override
-    public void updateOrder(UpdateOrderCommand command) {
-        orderRepository.findById(command.getId())
-                .ifPresent(order -> {
-                    Order updatedOrder = command.updateOrder(order);
-                    orderRepository.save(updatedOrder);
-                });
-    }
-
-    @Override
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
 
     @Override
-    public void updateOrderStatus(Long id, OrderStatus status) {
-        orderRepository.findById(id)
-                .ifPresent(order -> {
+    public UpdateStatusResponse updateOrderStatus(Long id, OrderStatus status) {
+        return orderRepository
+                .findById(id)
+                .map(order -> {
                     UpdateStatusResult result = order.updateStatus(status);
                     if(result.isRevoked()) {
                         bookRepository.saveAll(revokeBooks(order.getItems()));
                     }
                     orderRepository.save(order);
-                });
+                   return UpdateStatusResponse.success(order.getStatus());
+                })
+                .orElse(UpdateStatusResponse.failure(Error.NOT_FOUND));
     }
     private Set<Book> revokeBooks(Set<OrderItem> items) {
         return items

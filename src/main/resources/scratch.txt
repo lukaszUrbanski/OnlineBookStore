@@ -1,0 +1,7 @@
+Jako użytownik
+x - Mogę złożyć zamówienie(lista dostępnych ksiązek spada)
+x - Nie mogę zamówić więcej ksiązek niż jest dostępnych
+ - Mogę wycofać zamówienie ( lista dostpnych ksiązek wraca)
+ - Nie moge zamówić ksiązek których nie ma na liście
+ - Nie mogę zamówć ujemnej liczby ksiązek
+ - Nie mogę anulować zamówienia innego klienta (secutity)

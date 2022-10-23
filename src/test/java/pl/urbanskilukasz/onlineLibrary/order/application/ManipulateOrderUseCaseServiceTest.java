@@ -3,13 +3,10 @@ package pl.urbanskilukasz.onlineLibrary.order.application;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
@@ -38,14 +35,16 @@ class ManipulateOrderUseCaseServiceTest {
                 .builder()
                 .recipient(recipient())
                 .item(new OrderItemCommand(effectiveJava.getId(), 10))
-                .item(new OrderItemCommand(currencyJava.getId(), 10))
+                .item(new OrderItemCommand(currencyJava.getId(), 15))
                 .build();
         //when
         PlaceOrderResponse response = orderUseCase.placeOrder(command);
         //then
-        Assertions.assertTrue
-                (response.isResponse());
+        Assertions.assertTrue(response.isSuccess());
+        Assertions.assertEquals(40, bookJpaRepository.findById(effectiveJava.getId()).get().getAvailable());
+        Assertions.assertEquals(35, bookJpaRepository.findById(currencyJava.getId()).get().getAvailable());
     }
+
     @Test
     public void userCantOrderMoreBookThanIsAvailable() {
         //given
@@ -57,14 +56,21 @@ class ManipulateOrderUseCaseServiceTest {
                 .item(new OrderItemCommand(currencyJava.getId(), 10))
                 .build();
         //when
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            orderUseCase.placeOrder(command);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> orderUseCase.placeOrder(command));
 
         //then
         Assertions.assertTrue(exception.getMessage().contains("Too many copies of book "+ currencyJava.getId() +" requested"));
     }
 
+    @Test
+    public void userCanRevokeOrder(){
+        //given
+//            placeOrder
+        //when
+
+        //then
+    }
     private Book givenEffectiveJava(Long available) {
         return bookJpaRepository.save(new Book("Effective Java", 2005, new BigDecimal("99.90"), available));
     }
