@@ -20,15 +20,24 @@ public enum OrderStatus {
      PAID{
           @Override
           public UpdateStatusResult updateStatus(OrderStatus status) {
-               if(status == SHIPPED){
-                   return UpdateStatusResult.ok(SHIPPED);
-               }
-               return super.updateStatus(status);
+               return switch (status){
+                    case SHIPPED -> UpdateStatusResult.ok(SHIPPED);
+                    case CANCELED -> throw new IllegalStateException("Cannot cancel paid order.");
+                    default -> super.updateStatus(status);
+               };
           }
      },
      CANCELED,
      ABANDONED,
-     SHIPPED;
+     SHIPPED{
+          @Override
+          public UpdateStatusResult updateStatus(OrderStatus status) {
+               if (status == CANCELED){
+                    throw new IllegalStateException("Cannot cancel shipped order.");
+               }
+               return super.updateStatus(status);
+          }
+     };
 
      public static Optional<OrderStatus> parseString(String value) {
           return Arrays.stream(values())

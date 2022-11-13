@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface BookJpaRepository extends JpaRepository<Book, Long> {
 
+    @Override
+    Optional<Book> findById(Long aLong);
 
     @Query("SELECT DISTINCT b FROM Book b JOIN FETCH b.authors")
     List<Book> findAllEager();

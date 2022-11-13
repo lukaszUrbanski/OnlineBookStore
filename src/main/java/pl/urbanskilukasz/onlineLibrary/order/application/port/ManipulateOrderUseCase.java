@@ -18,7 +18,7 @@ public interface ManipulateOrderUseCase {
 
     void deleteOrder(Long id);
 
-    UpdateStatusResponse updateOrderStatus(Long id, OrderStatus orderStatus);
+    UpdateStatusResponse updateOrderStatus(UpdateStatusCommand command);
 
     @Builder
     @Value
@@ -34,6 +34,14 @@ public interface ManipulateOrderUseCase {
     class OrderItemCommand {
         Long bookId;
         int quantity;
+    }
+
+    @Value
+    @AllArgsConstructor
+    class UpdateStatusCommand{
+        Long orderId;
+        OrderStatus status;
+        String email;
     }
 
     @Data
@@ -63,21 +71,36 @@ public interface ManipulateOrderUseCase {
         public PlaceOrderResponse failure(String error) {
             return new PlaceOrderResponse(false, error, null);
         }
-    }
-    class UpdateStatusResponse extends Either<Error, OrderStatus> {
+    }@Getter
+    class UpdateStatusResponse extends Either<String, OrderStatus> {
 
-        public UpdateStatusResponse(boolean success, Error left, OrderStatus right) {
+        public UpdateStatusResponse(boolean success, String left, OrderStatus right) {
             super(success, left, right);
         }
 
         public static UpdateStatusResponse success(OrderStatus status) {
             return new UpdateStatusResponse(true, null, status);
         }
-        public static UpdateStatusResponse failure(Error error) {
+        public static UpdateStatusResponse failure(String error) {
             return new UpdateStatusResponse(false, error, null);
         }
-
     }
+
+
+//    class UpdateStatusResponse extends Either<Error, OrderStatus> {
+//
+//        public UpdateStatusResponse(boolean success, Error left, OrderStatus right) {
+//            super(success, left, right);
+//        }
+//
+//        public static UpdateStatusResponse success(OrderStatus status) {
+//            return new UpdateStatusResponse(true, null, status);
+//        }
+//        public static UpdateStatusResponse failure(Error error) {
+//            return new UpdateStatusResponse(false, error, null);
+//        }
+//
+//    }
 
     @AllArgsConstructor
     @Getter

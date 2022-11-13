@@ -55,8 +55,11 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     }
 
     private OrderItem toOrderItem(OrderItemCommand command) {
-        Book book = bookRepository.getById(command.getBookId());
+        Long bookId = command.getBookId();
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Book with id" + bookId + " not exists"));
         int quantity = command.getQuantity();
+        if (quantity <= 0)
+            throw new IllegalArgumentException("Cannot order negative number of book");
         if (book.getAvailable() >= quantity){
             return new OrderItem(book, quantity);
         }
@@ -69,19 +72,27 @@ public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
     }
 
     @Override
-    public UpdateStatusResponse updateOrderStatus(Long id, OrderStatus status) {
+    public UpdateStatusResponse updateOrderStatus(UpdateStatusCommand command) {
         return orderRepository
-                .findById(id)
+                .findById(command.getOrderId())
                 .map(order -> {
-                    UpdateStatusResult result = order.updateStatus(status);
+                    if(!hasAccess(command, order)){
+                        return UpdateStatusResponse.failure("Unauthorized!");
+                    }
+                    UpdateStatusResult result = order.updateStatus(command.getStatus());
                     if(result.isRevoked()) {
                         bookRepository.saveAll(revokeBooks(order.getItems()));
                     }
                     orderRepository.save(order);
                    return UpdateStatusResponse.success(order.getStatus());
                 })
-                .orElse(UpdateStatusResponse.failure(Error.NOT_FOUND));
+                .orElse(UpdateStatusResponse.failure("Order not found"));
     }
+
+    private static boolean hasAccess(UpdateStatusCommand command, Order order) {
+        return command.getEmail().equalsIgnoreCase(order.getRecipient().getEmail());
+    }
+
     private Set<Book> revokeBooks(Set<OrderItem> items) {
         return items
                 .stream()

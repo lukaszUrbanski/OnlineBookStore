@@ -12,6 +12,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.*;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -28,6 +30,10 @@ public class AbandonedOrderJob {
         LocalDateTime olderThan = LocalDateTime.now().minus(paymentPeriod);
         List<Order> orders = repository.findByStatusAndCreatedAtLessThanEqual(OrderStatus.NEW, olderThan);
         log.info("Found orders to be abandoned :" + orders.size());
-        orders.forEach(order -> orderUseCase.updateOrderStatus(order.getId(), OrderStatus.ABANDONED));
+        orders.forEach(order -> {
+            //Todo: naprawić w module security
+            UpdateStatusCommand command = new UpdateStatusCommand(order.getId(), OrderStatus.ABANDONED, null);
+            orderUseCase.updateOrderStatus(command);
+        });
     }
 }

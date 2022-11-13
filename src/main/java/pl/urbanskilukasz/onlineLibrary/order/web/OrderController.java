@@ -16,9 +16,11 @@ import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -49,10 +51,13 @@ public class OrderController {
 
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateStatus(@PathVariable Long id, @RequestBody UpdateStatusCommand updateOrderCommand) {
-        OrderStatus orderStatus = OrderStatus.parseString(updateOrderCommand.status)
-                .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Unknown status: " + updateOrderCommand.status));
-        manipulateOrder.updateOrderStatus(id, orderStatus);
+    public void updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String status = body.get("status");
+        OrderStatus orderStatus = OrderStatus.parseString(status)
+                .orElseThrow(() -> new ResponseStatusException(BAD_REQUEST, "Unknown status: " + status));
+        //Todo: naprawić w module security
+        UpdateStatusCommand command = new UpdateStatusCommand(id, orderStatus, null);
+        manipulateOrder.updateOrderStatus(command);
     }
 
     @DeleteMapping("/{id}")
@@ -73,11 +78,6 @@ public class OrderController {
                     .collect(Collectors.toList());
             return new PlaceOrderCommand(orderItems, recipient);
         }
-    }
-
-    @Data
-    private static class UpdateStatusCommand {
-        String status;
     }
 }
 
