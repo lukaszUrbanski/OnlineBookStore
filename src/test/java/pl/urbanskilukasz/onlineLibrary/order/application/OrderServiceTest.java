@@ -7,11 +7,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
-import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.OrderItemCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderCommand;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.PlaceOrderResponse;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
 
@@ -21,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase.*;
 
 @DataJpaTest
-@Import({ManipulateOrderUseCaseService.class, QueryOrderService.class})
+@Import({ManipulateOrderService.class, QueryOrderService.class})
 class OrderServiceTest {
 
     @Autowired
     BookJpaRepository bookJpaRepository;
 
     @Autowired
-    ManipulateOrderUseCaseService service;
+    ManipulateOrderService service;
 
     @Autowired
     QueryOrderService queryOrderService;

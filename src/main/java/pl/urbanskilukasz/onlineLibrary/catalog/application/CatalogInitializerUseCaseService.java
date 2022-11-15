@@ -19,7 +19,7 @@ import pl.urbanskilukasz.onlineLibrary.catalog.db.AuthorJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Author;
 import pl.urbanskilukasz.onlineLibrary.catalog.domain.Book;
 import pl.urbanskilukasz.onlineLibrary.jpa.BaseEntity;
-import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderUseCaseService;
+import pl.urbanskilukasz.onlineLibrary.order.application.ManipulateOrderService;
 import pl.urbanskilukasz.onlineLibrary.order.application.QueryOrderService;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.ManipulateOrderUseCase;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
@@ -41,7 +41,7 @@ import static pl.urbanskilukasz.onlineLibrary.catalog.application.port.CatalogUs
 public class CatalogInitializerUseCaseService implements CatalogInitializerUseCase {
 
     private final CatalogUseCase catalog;
-    private final ManipulateOrderUseCaseService placeOrder;
+    private final ManipulateOrderService placeOrder;
     private final QueryOrderService queryOrder;
     private final AuthorJpaRepository authorRepository;
     private final RestTemplate restTemplate;

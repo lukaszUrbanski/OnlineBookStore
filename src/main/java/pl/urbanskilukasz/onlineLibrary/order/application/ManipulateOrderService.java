@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class ManipulateOrderUseCaseService implements ManipulateOrderUseCase {
+public class ManipulateOrderService implements ManipulateOrderUseCase {
     private final OrderJpaRepository orderRepository;
     private final BookJpaRepository bookRepository;
     private final RecipientJpaRepository recipientRepository;
