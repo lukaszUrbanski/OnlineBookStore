@@ -154,6 +154,41 @@ class OrderServiceTest {
         assertEquals(35, availableCopiesOf(effectiveJava));
         assertEquals(OrderStatus.NEW, getOrderStatus(orderId));
     }
+    @Test
+    //TODO poprawić przy security
+    public void adminCanRevokeOtherUserOrder(){
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        String marek = "marek@example.com";
+        Long orderId = placeOrder(effectiveJava.getId(), 15, marek);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+        //when
+        String admin = "admin@example.org";
+        UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.CANCELED, admin);
+        service.updateOrderStatus(command);
+
+        //then
+        assertEquals(50, availableCopiesOf(effectiveJava));
+        assertEquals(OrderStatus.CANCELED, getOrderStatus(orderId));
+    }
+    @Test
+    //TODO poprawić przy security
+    public void adminCanMarkOrderAsPaid(){
+        //given
+        Book effectiveJava = givenEffectiveJava(50L);
+        String marek = "marek@example.com";
+        Long orderId = placeOrder(effectiveJava.getId(), 15, marek);
+        assertEquals(35L, availableCopiesOf(effectiveJava));
+        //when
+        String admin = "admin@example.org";
+        UpdateStatusCommand command = new UpdateStatusCommand(orderId, OrderStatus.PAID, admin);
+        service.updateOrderStatus(command);
+
+        //then
+        assertEquals(35, availableCopiesOf(effectiveJava));
+        assertEquals(OrderStatus.PAID, getOrderStatus(orderId));
+    }
+
 
     private Long placeOrder(Long id, int copies) {
         PlaceOrderCommand command = PlaceOrderCommand
