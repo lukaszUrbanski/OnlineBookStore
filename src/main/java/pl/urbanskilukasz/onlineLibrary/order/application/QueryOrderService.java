@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.urbanskilukasz.onlineLibrary.catalog.db.BookJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.application.port.QueryOrderUseCase;
+import pl.urbanskilukasz.onlineLibrary.order.application.price.OrderPrice;
+import pl.urbanskilukasz.onlineLibrary.order.application.price.PriceService;
 import pl.urbanskilukasz.onlineLibrary.order.db.OrderJpaRepository;
 import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
 
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QueryOrderService implements QueryOrderUseCase {
     private final OrderJpaRepository orderRepository;
-    private final BookJpaRepository bookRepository;
+    private final PriceService priceService;
 
     @Override
     @Transactional
@@ -32,14 +34,17 @@ public class QueryOrderService implements QueryOrderUseCase {
     public Optional<RichOrder> findById(Long id) {
         return orderRepository.findById(id).map(this::toRichOrder);
     }
-
     public RichOrder toRichOrder(Order order){
+        OrderPrice orderPrice = priceService.calculateOrderPrice(order);
         return new RichOrder(
                 order.getId(),
                 order.getStatus(),
                 order.getItems(),
                 order.getRecipient(),
-                order.getCreatedAt()
+                order.getCreatedAt(),
+                orderPrice,
+                orderPrice.finalPrice()
+
         );
     }
 }

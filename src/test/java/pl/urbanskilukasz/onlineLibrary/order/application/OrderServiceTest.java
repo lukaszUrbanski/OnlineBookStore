@@ -187,6 +187,24 @@ class OrderServiceTest {
         assertEquals(OrderStatus.PAID, getOrderStatus(orderId));
     }
 
+    @Test
+    public void shippingPriceShouldBeAddedToTotalPrice(){
+        //given 
+        Book book = getBook(50L, "49.90");
+        //when
+        Long orderId = placeOrder(book.getId(), 1);
+        //then
+        assertEquals("59.80", orderOf(orderId).getFinalPrice().toPlainString());
+    }
+
+    private RichOrder orderOf(Long orderId) {
+        return queryOrderService.findById(orderId).get();
+    }
+
+    private Book getBook(long quantity, String price) {
+        return bookJpaRepository.save(new Book("Effective Java", 2009, new BigDecimal(price), quantity));
+    }
+
 
     private Long placeOrder(Long id, int copies) {
         PlaceOrderCommand command = PlaceOrderCommand

@@ -3,10 +3,7 @@ package pl.urbanskilukasz.onlineLibrary.order.application.port;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import pl.urbanskilukasz.onlineLibrary.commons.Either;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Order;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderItem;
-import pl.urbanskilukasz.onlineLibrary.order.domain.OrderStatus;
-import pl.urbanskilukasz.onlineLibrary.order.domain.Recipient;
+import pl.urbanskilukasz.onlineLibrary.order.domain.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +24,7 @@ public interface ManipulateOrderUseCase {
         @Singular
         List<OrderItemCommand> items;
         Recipient recipient;
+        Delivery delivery;
     }
 
     @Data
